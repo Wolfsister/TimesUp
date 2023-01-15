@@ -1,9 +1,19 @@
-import {StyleSheet, Text, TextInput, View} from "react-native";
+import {Alert, Button, StyleSheet, Text, TextInput, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useState} from "react";
+import {NavigationProp} from "@react-navigation/native";
 
-export default function Homepage() {
-    const [text, setText] = useState('');
+type HomepageProps = {
+    navigation: NavigationProp<any>
+}
+
+export default function Homepage({navigation}: HomepageProps) {
+    const [text, setText] = useState<string>('');
+
+
+    const onPressButton = () => {
+        Alert.alert('Bouton appuyé');
+    }
 
     return (
         <View style={styles.container}>
@@ -13,6 +23,13 @@ export default function Homepage() {
             {text &&
                 <Text>🚀 {text} 🚀🍕</Text>
             }
+            
+            <Button title={'Joli bouton ! ✨'} onPress={() => {
+                console.log('On a appuyé sur le joli bouton !');
+                onPressButton();
+            }}/>
+
+            <Button title={'Liste des mots'} onPress={() => navigation.navigate('List of words')} />
             <StatusBar style="auto"/>
         </View>
     )
