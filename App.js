@@ -3,9 +3,9 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import ListOfWords from "./pages/ListOfWords";
 
-
 const Stack = createNativeStackNavigator();
 
+//TODO: add eslint
 export default function App() {
   return (
       <NavigationContainer>

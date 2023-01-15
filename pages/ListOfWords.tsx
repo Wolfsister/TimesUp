@@ -1,5 +1,7 @@
 import {Alert, Button, FlatList, Text, TextInput, View} from "react-native";
 import {useEffect, useState} from "react";
+import {getData, storeData} from "../utils/storage";
+import {LIST_OF_ALL_WORDS} from "../const/storageKeys";
 
 type WordItem = {
     name: string;
@@ -10,16 +12,23 @@ export default function ListOfWords() {
     const [listOfWords, setListOfWords] = useState<WordItem[]>([]);
     const [newWord, setNewWord] = useState<string>('');
     useEffect(() => {
-        setListOfWords(LIST_OF_WORDS.map((word: string) => {
-            return {
-                name: word + '🤘'
+        const fetchData = async () => {
+            const savedWords = await getData(LIST_OF_ALL_WORDS)
+            if (savedWords) {
+                setListOfWords(savedWords);
             }
-        }));
+        }
+
+        fetchData().catch((error: string) => {
+            console.error('Error fetching data ' + error);
+        });
     }, [])
 
-    const addWord = () => {
+    const addWord = async () => {
         if (newWord.length > 0) {
-            setListOfWords([...listOfWords, {name: newWord + '🌊'}]);
+            const updatedListOfWords = [...listOfWords, {name: newWord + '🌊'}];
+            setListOfWords(updatedListOfWords);
+            await storeData(LIST_OF_ALL_WORDS, JSON.stringify(updatedListOfWords));
             setNewWord('');
         } else {
             Alert.alert('Merci de choisir un nom');
@@ -44,7 +53,3 @@ export default function ListOfWords() {
     )
 }
 
-const LIST_OF_WORDS = [
-    'Jimi Hendrix',
-    'Jimmy Page'
-];
