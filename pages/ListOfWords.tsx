@@ -1,23 +1,50 @@
-import {StyleSheet, Text, View} from "react-native";
-import {StatusBar} from "expo-status-bar";
+import {Alert, Button, FlatList, Text, TextInput, View} from "react-native";
+import {useEffect, useState} from "react";
+
+type WordItem = {
+    name: string;
+}
 
 export default function ListOfWords() {
-    return (
-        <View style={styles.container}>
-            <Text>Page de test avec la liste des mots</Text>
 
-            <StatusBar style="auto"/>
+    const [listOfWords, setListOfWords] = useState<WordItem[]>([]);
+    const [newWord, setNewWord] = useState<string>('');
+    useEffect(() => {
+        setListOfWords(LIST_OF_WORDS.map((word: string) => {
+            return {
+                name: word + '🤘'
+            }
+        }));
+    }, [])
+
+    const addWord = () => {
+        if (newWord.length > 0) {
+            setListOfWords([...listOfWords, {name: newWord + '🌊'}]);
+            setNewWord('');
+        } else {
+            Alert.alert('Merci de choisir un nom');
+        }
+    }
+
+    return (
+        <View>
+            <FlatList data={listOfWords}
+                renderItem={({item}) => (
+                    <Text>
+                        {item.name}
+                    </Text>
+                    )} />
+            <TextInput
+                onChangeText={(text) => setNewWord(text)}
+                placeholder={'Nom de personnage à ajouter'}
+                value={newWord}
+            />
+            <Button title={'Ajouter un personnage'} onPress={addWord}></Button>
         </View>
     )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderStyle: "solid",
-        borderColor: 'black'
-    },
-});
+const LIST_OF_WORDS = [
+    'Jimi Hendrix',
+    'Jimmy Page'
+];
